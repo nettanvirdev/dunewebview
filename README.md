@@ -30,7 +30,7 @@
 
 ### Manual
 
-Copy the `DuneWebView.java`  file to your project's package directory.
+Copy the `DuneWebView.java` file to your project's package directory.
 or Copy the duneweb-release.aar/duneweb-debug.aar in your project's `lib` folder
 
 ## 🎯 Basic Usage
@@ -247,3 +247,15 @@ For support, please open an issue in the repository or contact us at support@lev
 ---
 
 ⭐ Don't forget to star the repo if you find it useful!
+
+## 📸 Example Screenshots
+
+Here are some example screenshots of DuneWebView in action:
+
+### Main Activity
+
+![Main Activity](images/image1.png)
+
+### Browser Activity
+
+![Browser Activity](images/image2.png)
