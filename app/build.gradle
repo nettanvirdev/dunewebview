@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.coordinatorlayout:coordinatorlayout:1.2.0'
-    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation libs.coordinatorlayout
+    implementation libs.swiperefreshlayout
 
     implementation libs.appcompat
     implementation libs.material
