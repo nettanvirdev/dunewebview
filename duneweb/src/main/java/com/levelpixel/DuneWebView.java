@@ -27,6 +27,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * EnhancedWebView extends Android's WebView with additional security and user experience features:
@@ -360,26 +362,39 @@ public class DuneWebView extends WebView {
      * Format: One domain per line
      */
     public void loadAdBlockListFromResource(boolean useDefaultHosts, @Nullable Integer resourceId) {
-        try {
-            InputStream fis;
-            if (useDefaultHosts || resourceId == null) {
-                fis = getContext().getResources().openRawResource(R.raw.adblockserverlist);
-            } else {
-                fis = getContext().getResources().openRawResource(resourceId);
-            }
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(() -> {
+            try {
+            /*
+             prrocessing to be exact 536975 lines from buffer.
+             running in a background thread to prevent Ui blocking.
+            */
 
-            BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (!line.trim().isEmpty()) {
-                    adBlockList.add(line.trim().toLowerCase());
+                InputStream fis = (useDefaultHosts || resourceId == null)
+                        ? getContext().getResources().openRawResource(R.raw.adblockserverlist)
+                        : getContext().getResources().openRawResource(resourceId);
+
+                try (BufferedReader br = new BufferedReader(new InputStreamReader(fis))) {
+                    Set<String> tempSet = new HashSet<>();
+
+
+                    br.lines()
+                            .map(String::trim)
+                            .filter(line -> !line.isEmpty())
+                            .map(String::toLowerCase)
+                            .forEach(tempSet::add);
+
+                    // sync
+                    synchronized (adBlockList) {
+                        adBlockList.addAll(tempSet);
+                    }
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                executor.shutdown(); //cls
             }
-            br.close();
-            fis.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        });
     }
 
 

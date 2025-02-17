@@ -28,10 +28,46 @@
 
 ## 📦 Installation
 
-### Manual
+### Through Maven (JitPack)
 
-Copy the `DuneWebView.java` file to your project's package directory.
-or Copy the duneweb-release.aar/duneweb-debug.aar in your project's `lib` folder
+#### Add JitPack URL to `settings.gradle`
+#### Gradle Groovy
+```groovy
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
+    }
+}
+```  
+#### Gradle.kts
+```kotlin
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        mavenCentral()
+        maven("https://jitpack.io")
+    }
+}
+```  
+
+#### Add the dependency to your project
+#### Gradle Groovy
+```groovy
+dependencies {
+    implementation 'com.github.nettanvirdev:dunewebview:latest-version'
+}
+```  
+#### Gradle.kts
+
+```kotlin
+dependencies {
+    implementation("com.github.nettanvirdev:dunewebview:latest-version")
+}
+```  
+
+
 
 ## 🎯 Basic Usage
 

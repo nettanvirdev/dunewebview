@@ -1,57 +1,52 @@
 package com.levelpixel.dunebrowser;
 
-import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
+
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
+
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.app.databinding.ActivityMainBinding;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.TextWatcher;
 import android.text.Editable;
-import android.widget.LinearLayout;
 
-import com.levelpixel.DuneWebView;
+
+import com.levelpixel.dunebrowser.databinding.ActivityMainBinding;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Pattern;
 
 public class MainActivity extends AppCompatActivity {
-
-    // UI components
-    private EditText urlInput;
-    private ImageButton backButton, forwardButton, refreshButton, settingsButton, goButton;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private ProgressBar progressBar;
-
-    // WebView component from Dune library
-    private DuneWebView duneWebView;
+    
 
     // Default URL to load
     private static final String DEFAULT_URL = "https://www.google.com";
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+ 
+        // Enable edge-to-edge display
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        
+        // Inflate the binding
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
@@ -70,61 +65,52 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes all UI components and configures DuneWebView settings.
+     * Initializes all UI components and configures  binding.duneWebView settings.
      */
     private void initializeViews() {
-        urlInput = findViewById(R.id.urlInput);
-        backButton = findViewById(R.id.backButton);
-        forwardButton = findViewById(R.id.forwardButton);
-        refreshButton = findViewById(R.id.refreshButton);
-        settingsButton = findViewById(R.id.settingsButton);
-        goButton = findViewById(R.id.goButton);
-        progressBar = findViewById(R.id.progressBar);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        duneWebView = findViewById(R.id.duneWebView);
-
-        // Configure DuneWebView with security and privacy settings
-        duneWebView.setAdBlockEnabled(true);  //IF YOU WANT TO BLOCK ADS AND TRACKERS
-        duneWebView.setPopupBlockEnabled(true); //IF YOU WANT TO BLOCK ANNOYING POPUP
-        duneWebView.setRedirectBlockEnabled(true); // IF YOU WANT TO BLOCK ANNOYING RANDOM REDIRECT
-        duneWebView.setUseSystemDownloader(true); //IF YOU WANT TO USE SYSTEM DEFAULT DOWNLOAD MANAGER , YOU CAN USE YOUR OWN DOWNLOAD MANAGER TOO
+        
+        // Configure  binding.duneWebView with security and privacy settings
+        binding.duneWebView.setAdBlockEnabled(true);  //IF YOU WANT TO BLOCK ADS AND TRACKERS
+         binding.duneWebView.setPopupBlockEnabled(true); //IF YOU WANT TO BLOCK ANNOYING POPUP
+         binding.duneWebView.setRedirectBlockEnabled(true); // IF YOU WANT TO BLOCK ANNOYING RANDOM REDIRECT
+         binding.duneWebView.setUseSystemDownloader(true); //IF YOU WANT TO USE SYSTEM DEFAULT DOWNLOAD MANAGER , YOU CAN USE YOUR OWN DOWNLOAD MANAGER TOO
 
         // Load default ad blocklist
-        duneWebView.loadAdBlockListFromResource(true, null);
+         binding.duneWebView.loadAdBlockListFromResource(true, null);
 
         // Load custom blocked domains
-        duneWebView.addCustomBlockedDomain("ads.example.com");
-        duneWebView.addCustomBlockedDomain("trackers.example.com");
+         binding.duneWebView.addCustomBlockedDomain("ads.example.com");
+         binding.duneWebView.addCustomBlockedDomain("trackers.example.com");
 
         // Example for removing and clearing blocklist entries
-        duneWebView.removeBlockedDomain("ads.example.com");
-        duneWebView.clearBlocklist();
+         binding.duneWebView.removeBlockedDomain("ads.example.com");
+         binding.duneWebView.clearBlocklist();
 
-        // Load the default URL in DuneWebView
-        duneWebView.loadUrl(DEFAULT_URL);
+        // Load the default URL in  binding.duneWebView
+         binding.duneWebView.loadUrl(DEFAULT_URL);
 
         // Set up progress view listener to track page loading
-        duneWebView.setProgressListener(progress -> {
-            progressBar.setVisibility(View.VISIBLE);
-            progressBar.setProgress(progress);
+         binding.duneWebView.setProgressListener(progress -> {
+             binding.progressBar.setVisibility(View.VISIBLE);
+             binding.progressBar.setProgress(progress);
             if (progress == 100) {
-                progressBar.setVisibility(View.INVISIBLE);
+                binding.progressBar.setVisibility(View.INVISIBLE);
             }
-            urlInput.setText(duneWebView.getUrl());
+             binding.urlInput.setText( binding.duneWebView.getUrl());
         });
 
         // Example to check if a specific domain is blocked
-        boolean isFacebookBlocked = duneWebView.isBlockedDomain("facebook.com");
-        int blockedHostsSize = duneWebView.getBlocklistSize();
+        boolean isFacebookBlocked =  binding.duneWebView.isBlockedDomain("facebook.com");
+        int blockedHostsSize =  binding.duneWebView.getBlocklistSize();
     }
 
     /**
      * Configures SwipeRefreshLayout to refresh the page on swipe gesture.
      */
     private void setupSwipeRefresh() {
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            duneWebView.reload();
-            new Handler().postDelayed(() -> swipeRefreshLayout.setRefreshing(false), 500);
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+             binding.duneWebView.reload();
+            new Handler().postDelayed(() ->  binding.swipeRefreshLayout.setRefreshing(false), 500);
         });
 
         // Set color scheme for refresh indicator based on app theme attributes
@@ -132,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
         int backgroundColor = getColorFromAttr(this, R.attr.backgroundColor);
         int colorSecondary = getColorFromAttr(this, R.attr.colorTextSecondary);
 
-        swipeRefreshLayout.setColorSchemeColors(colorPrimary, colorSecondary, backgroundColor);
+        binding.swipeRefreshLayout.setColorSchemeColors(colorPrimary, colorSecondary, backgroundColor);
     }
 
     /**
@@ -155,43 +141,43 @@ public class MainActivity extends AppCompatActivity {
      */
     private void setupListeners() {
         // Show 'Go' button only if there's input text
-        urlInput.addTextChangedListener(new TextWatcher() {
+        binding.urlInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                goButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
+                binding.goButton.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
             @Override
             public void afterTextChanged(Editable s) {}
         });
 
-        goButton.setOnClickListener(v -> {
+        binding.goButton.setOnClickListener(v -> {
             loadUrl();
             hideKeyboard();
         });
 
-        backButton.setOnClickListener(v -> {
-            if (duneWebView.canGoBack()) {
-                duneWebView.goBack();
+        binding.backButton.setOnClickListener(v -> {
+            if ( binding.duneWebView.canGoBack()) {
+                 binding.duneWebView.goBack();
             } else {
-                duneWebView.loadUrl(DEFAULT_URL);
+                 binding.duneWebView.loadUrl(DEFAULT_URL);
             }
         });
 
-        forwardButton.setOnClickListener(v -> {
-            if (duneWebView.canGoForward()) {
-                duneWebView.goForward();
+        binding.forwardButton.setOnClickListener(v -> {
+            if ( binding.duneWebView.canGoForward()) {
+                 binding.duneWebView.goForward();
             }
         });
 
-        refreshButton.setOnClickListener(v -> duneWebView.reload());
+        binding.refreshButton.setOnClickListener(v ->  binding.duneWebView.reload());
 
-        settingsButton.setOnClickListener(v -> {
+        binding.settingsButton.setOnClickListener(v -> {
             // Settings button action can be defined here
         });
 
-        urlInput.setOnEditorActionListener((v, actionId, event) -> {
+        binding. urlInput.setOnEditorActionListener((v, actionId, event) -> {
             loadUrl();
             hideKeyboard();
             return true;
@@ -213,8 +199,8 @@ public class MainActivity extends AppCompatActivity {
      * Clears focus from the URL input field and focuses on the WebView.
      */
     private void clearUrlInputFocus() {
-        urlInput.clearFocus();
-        duneWebView.requestFocus();
+        binding.urlInput.clearFocus();
+         binding.duneWebView.requestFocus();
     }
 
     // URL processing configurations
@@ -231,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
      * Loads a URL or search query from the URL input field.
      */
     private void loadUrl() {
-        String input = urlInput.getText().toString().trim();
+        String input =  binding.urlInput.getText().toString().trim();
 
         if (input.isEmpty()) {
             showError("Please enter a URL or search term");
@@ -239,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         String processedUrl = processInput(input);
-        duneWebView.loadUrl(processedUrl);
+         binding.duneWebView.loadUrl(processedUrl);
     }
 
     /**
