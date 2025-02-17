@@ -36,13 +36,19 @@ jobs:
       - name: Build Release AAR
         run: ./gradlew :duneweb:assembleRelease
 
+      - name: Verify Debug AAR
+        run: ls -la duneweb/build/outputs/aar/duneweb-debug.aar
+
+      - name: Verify Release AAR
+        run: ls -la duneweb/build/outputs/aar/duneweb-release.aar
+
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            rootfolder/duneweb/build/outputs/aar/duneweb-debug.aar
-            rootfolder/duneweb/build/outputs/aar/duneweb-release.aar
+            duneweb/build/outputs/aar/duneweb-debug.aar
+            duneweb/build/outputs/aar/duneweb-release.aar
           draft: false
           prerelease: false
           name: ${{ github.event.ref }} Release

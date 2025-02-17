@@ -1,4 +1,4 @@
-name: Build & Publish Release
+name: Build & Publish AAR
 
 on:
   push:
@@ -27,48 +27,32 @@ jobs:
           echo "y" | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
           echo "NDK_ROOT=${ANDROID_HOME}/ndk/27.0.12077973" >> $GITHUB_ENV
 
-      - name: Decode Keystore
-        run: |
-          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
-          echo "Keystore decoded successfully"
-
-      - name: Create keystore.properties
-        run: |
-          echo "storeFile=keystore.jks" > app/keystore.properties
-          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> app/keystore.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> app/keystore.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> app/keystore.properties
-
-      - name: Get Tag Version
-        id: tag_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-
-      - name: Update Version in build.gradle
-        run: |
-          sed -i "s/versionName \".*\"/versionName \"${{ steps.tag_version.outputs.VERSION }}\"/" app/build.gradle
-
       - name: Make Gradlew Executable
         run: chmod +x ./gradlew
 
-      - name: Build Release APK
-        run: ./gradlew clean assembleRelease
+      - name: Build Debug AAR
+        run: ./gradlew :duneweb:assembleDebug
 
-      - name: Build Release Bundle
-        run: ./gradlew bundleRelease
+      - name: Build Release AAR
+        run: ./gradlew :duneweb:assembleRelease
+
+      - name: Verify Debug AAR
+        run: ls -la duneweb/build/outputs/aar/duneweb-debug.aar
+
+      - name: Verify Release AAR
+        run: ls -la duneweb/build/outputs/aar/duneweb-release.aar
 
       - name: Create Release
         id: create_release
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            app/build/outputs/apk/release/*.apk
-            app/build/outputs/bundle/release/*.aab
+            duneweb/build/outputs/aar/duneweb-debug.aar
+            duneweb/build/outputs/aar/duneweb-release.aar
           draft: false
           prerelease: false
-          name: Release ${{ steps.tag_version.outputs.VERSION }}
+          name: ${{ github.event.ref }} Release
           body: |
-            Release ${{ steps.tag_version.outputs.VERSION }}
-            
-            See CHANGELOG.md for details.
+            AAR artifacts for version ${{ github.event.ref }}
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN }}

@@ -27,6 +27,10 @@ jobs:
           echo "y" | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
           echo "NDK_ROOT=${ANDROID_HOME}/ndk/27.0.12077973" >> $GITHUB_ENV
 
+      - name: Get Tag Version
+        id: tag_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
       - name: Make Gradlew Executable
         run: chmod +x ./gradlew
 
