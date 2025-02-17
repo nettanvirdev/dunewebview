@@ -1,5 +1,6 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
 }
 android {
     namespace 'com.levelpixel.duneweb'
@@ -27,7 +28,33 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+
 }
+
+
+
+publishing {
+    publications {
+        create("release", MavenPublication.class) {
+            groupId = "com.github.nettanvirdev"
+            artifactId = "dunewebview"
+            version = "1.0.1"
+
+            afterEvaluate {
+                from(components["release"])
+            }
+        }
+    }
+}
+
+
+
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
