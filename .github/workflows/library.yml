@@ -1,0 +1,52 @@
+name: Build & Publish AAR
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on tags like v1.0.0, v2.3.1, etc.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up NDK
+        run: |
+          echo "y" | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
+          echo "NDK_ROOT=${ANDROID_HOME}/ndk/27.0.12077973" >> $GITHUB_ENV
+
+      - name: Make Gradlew Executable
+        run: chmod +x ./gradlew
+
+      - name: Build Debug AAR
+        run: ./gradlew :duneweb:assembleDebug
+
+      - name: Build Release AAR
+        run: ./gradlew :duneweb:assembleRelease
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rootfolder/duneweb/build/outputs/aar/duneweb-debug.aar
+            rootfolder/duneweb/build/outputs/aar/duneweb-release.aar
+          draft: false
+          prerelease: false
+          name: ${{ github.event.ref }} Release
+          body: |
+            AAR artifacts for version ${{ github.event.ref }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}

@@ -1,0 +1,74 @@
+name: Build & Publish Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on tags like v1.0.0, v2.3.1, etc.
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set up NDK
+        run: |
+          echo "y" | ${ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
+          echo "NDK_ROOT=${ANDROID_HOME}/ndk/27.0.12077973" >> $GITHUB_ENV
+
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/keystore.jks
+          echo "Keystore decoded successfully"
+
+      - name: Create keystore.properties
+        run: |
+          echo "storeFile=keystore.jks" > app/keystore.properties
+          echo "storePassword=${{ secrets.KEYSTORE_PASSWORD }}" >> app/keystore.properties
+          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> app/keystore.properties
+          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> app/keystore.properties
+
+      - name: Get Tag Version
+        id: tag_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Update Version in build.gradle
+        run: |
+          sed -i "s/versionName \".*\"/versionName \"${{ steps.tag_version.outputs.VERSION }}\"/" app/build.gradle
+
+      - name: Make Gradlew Executable
+        run: chmod +x ./gradlew
+
+      - name: Build Release APK
+        run: ./gradlew clean assembleRelease
+
+      - name: Build Release Bundle
+        run: ./gradlew bundleRelease
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            app/build/outputs/apk/release/*.apk
+            app/build/outputs/bundle/release/*.aab
+          draft: false
+          prerelease: false
+          name: Release ${{ steps.tag_version.outputs.VERSION }}
+          body: |
+            Release ${{ steps.tag_version.outputs.VERSION }}
+            
+            See CHANGELOG.md for details.
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
