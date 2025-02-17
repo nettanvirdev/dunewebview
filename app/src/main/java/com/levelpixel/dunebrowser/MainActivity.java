@@ -11,7 +11,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Toast;
+
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.app.databinding.ActivityMainBinding;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.text.TextWatcher;
 import android.text.Editable;
 
@@ -32,8 +40,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+ 
+        // Enable edge-to-edge display
+        EdgeToEdge.enable(this);
+        
+        // Inflate the binding
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
+            Insets bars = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                            | WindowInsetsCompat.Type.displayCutout()
+            );
+            v.setPadding(bars.left, bars.top, bars.right, bars.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         // Initialize all views and listeners
         initializeViews();
