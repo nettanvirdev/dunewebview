@@ -30,14 +30,15 @@
 
 ### Manual
 
-Copy the `DuneWebView.java` or `DuneWebView.kt` file to your project's package directory.
+Copy the `DuneWebView.java`  file to your project's package directory.
+or Copy the duneweb-release.aar/duneweb-debug.aar in your project's `lib` folder
 
 ## 🎯 Basic Usage
 
 ### XML Layout
 
 ```xml
-<com.yourpackagename.DuneWebView
+<com.levelpixel.DuneWebView
     android:id="@+id/webView"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
