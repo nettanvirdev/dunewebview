@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor"
+    tools:context=".MainActivity">
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
+        android:layout_width="match_parent"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="?attr/cardColor"
+        android:layout_height="match_parent">
+
+        <com.levelpixel.DuneWebView
+            android:id="@+id/duneWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="bottom"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:background="#FFFFFF"
+            android:backgroundTint="?attr/backgroundColor"
+            android:elevation="8dp">
+
+            <LinearLayout
+                android:id="@+id/urlInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/urlInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/url_input_background"
+                    android:hint="Search or enter URL"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="48dp"
+                    android:textColor="?attr/colorTextPrimary"
+                    android:textColorHint="?attr/colorTextHint"
+                    android:inputType="textUri"
+                    android:imeOptions="actionGo"
+                    android:singleLine="true" />
+
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:progressTint="?attr/colorTextPrimary"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:visibility="invisible"
+                    android:layout_marginTop="-2dp"/>
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/goButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_alignEnd="@id/urlInputLayout"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/arrow_right"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal"
+            android:background="#FFFFFF"
+            android:backgroundTint="?attr/backgroundColor"
+            android:elevation="8dp"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/arrow_back" />
+
+            <ImageButton
+                android:id="@+id/forwardButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/arrow_right" />
+
+            <ImageButton
+                android:id="@+id/refreshButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/refresh"
+                />
+
+            <ImageButton
+                android:id="@+id/settingsButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/settings" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,0 +1,49 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Dune.DARK" parent="Theme.AppCompat.DayNight.NoActionBar">
+
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">false</item>
+
+
+        <item name="backgroundColor">@color/background</item>
+        <item name="colorTextPrimary">@color/colorTextPrimary</item>
+        <item name="colorTextSecondary">@color/colorTextSecondary</item>
+        <item name="colorTextHint">@color/colorTextHint</item>
+        <item name="cardColor">@color/colorCard</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+
+
+
+    </style>
+
+    <style name="AlertDialogTheme" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
+
+    <style name="Dune.WHITE" parent="Theme.AppCompat.DayNight.NoActionBar">
+
+        <item name="android:navigationBarColor">@color/background_W</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@color/background_W</item>
+        <item name="android:windowLightStatusBar" tools:ignore="NewApi">true</item>
+
+        <item name="colorTextHint">@color/colorTextHint_W</item>
+        <item name="backgroundColor">@color/background_W</item>
+        <item name="colorTextPrimary">@color/colorTextPrimary_W</item>
+        <item name="colorTextSecondary">@color/colorTextSecondary_W</item>
+        <item name="cardColor">@color/colorCard_W</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+
+
+    </style>
+
+
+</resources>

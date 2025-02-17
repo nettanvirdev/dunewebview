@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/splash_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/backgroundColor">
+
+    <LinearLayout
+        android:id="@+id/splash_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="32dp">
+
+        <!-- Logo container -->
+        <FrameLayout
+            android:id="@+id/logo_container"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center"
+            android:alpha="0">
+
+            <ImageView
+                android:id="@+id/splash_logo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/browser"
+                android:scaleType="fitCenter"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/splash_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textSize="28sp"
+            android:textColor="?attr/colorTextSecondary"
+            android:fontFamily="@font/inter_semi_bold"
+            android:layout_marginTop="24dp"
+            android:alpha="0"
+            />
+
+        <TextView
+            android:id="@+id/splash_tagline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Secure • Fast • Reliable"
+            android:textAlignment="center"
+            android:textSize="14sp"
+            android:textColor="?attr/colorTextSecondary"
+            android:fontFamily="@font/inter_regular"
+            android:layout_marginTop="8dp"
+            android:alpha="0"
+            android:letterSpacing="0.02"
+            />
+    </LinearLayout>
+</FrameLayout>
