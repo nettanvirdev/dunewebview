@@ -254,8 +254,8 @@ Here are some example screenshots of DuneWebView in action:
 
 ### Main Activity
 
-![Main Activity](images/image1.png)
+![Main Activity](images/image1.jpg)
 
 ### Browser Activity
 
-![Browser Activity](images/image2.png)
+![Browser Activity](images/image2.jpg)
